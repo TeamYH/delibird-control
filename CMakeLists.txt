@@ -21,6 +21,7 @@ catkin_package(
 
 catkin_install_python(PROGRAMS
         src/${PROJECT_NAME}/signal.py
+	src/${PROJECT_NAME}/test.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
