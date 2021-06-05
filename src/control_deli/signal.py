@@ -5,7 +5,7 @@ import roslaunch
 from std_msgs.msg import String
 import os
 import sys
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
@@ -25,7 +25,6 @@ explore_launch_file = "/home/hj/catkin_ws/src/Clean-robot-turtlebot3/clean_robot
 
 clean_status = 0
 clean_work_status = 0
-
 slam_status = 0
 nav_status = 0
 serve_status = 0
@@ -52,26 +51,30 @@ def init_launch(launchfile, process_listener):
 
 
 def getOdompos(message):
-    roll = pitch = yaw = 0.0
+    #roll = pitch = yaw = 0.0
 
-    f = open(initposex_file, 'w')
-    sys.stdout.flush()
-    f.write(str(message.pose.pose.position.x))
-    f.close()
+    #f = open(initposex_file, 'w')
+    #sys.stdout.flush()
+    #f.write(str(message.pose.pose.position.x))
+    #f.close()
 
-    f = open(initposey_file, 'w')
-    sys.stdout.flush()
-    f.write(str(message.pose.pose.position.y))
-    f.close()
+    #f = open(initposey_file, 'w')
+    #sys.stdout.flush()
+    #f.write(str(message.pose.pose.position.y))
+    #f.close()
 
-    orientation_q = message.pose.pose.orientation
-    orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
-    (roll, pitch, yaw) = euler_from_quaternion(orientation_list)
+    #orientation_q = message.pose.pose.orientation
+    #orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+    #(roll, pitch, yaw) = euler_from_quaternion(orientation_list)
 
-    f = open(initposea_file, 'w')
-    sys.stdout.flush()
-    f.write(str(yaw))
-    f.close()
+    #f = open(initposea_file, 'w')
+    #sys.stdout.flush()
+    #f.write(str(yaw))
+    #f.close()
+
+    pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped)
+    #print(message)
+    pub.publish(message)
     
 
 
@@ -104,7 +107,7 @@ if __name__ == "__main__":
                 explore_status = 1
         elif data.data == "mapsave":
             rospy.loginfo("received signal: map save")
-            os.system("rosrun map_server map_saver -f /home/hj/auto_test_map")
+            os.system("rosrun map_server map_saver -f /home/hj/softcon_map")
 
         elif data.data == "mapstop":
             rospy.loginfo("received signal: map stop")
@@ -117,30 +120,32 @@ if __name__ == "__main__":
 
         elif data.data == "cleanmapload":
             rospy.loginfo("received signal: clean map load")
-            rospy.Subscriber('/odom', Odometry, getOdompos)
-            time.sleep(1)
-            clean_launch.start()
+            if clean_status == 0:
+                #rospy.Subscriber('/odom', Odometry, getOdompos)
+                #rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, getOdompos)
+                time.sleep(1)
+                clean_launch.start()
+                clean_status = 1
             # os.system("rostopic echo /odom/pose/pose/position/x -n 1 | head -n 1 > ~/catkin_ws/src/Clean-robot-turtlebot3/clean_robot/launch/init_x")
             # os.system("rostopic echo /odom/pose/pose/position/y -n 1 | head -n 1 > ~/catkin_ws/src/Clean-robot-turtlebot3/clean_robot/launch/init_y")
 
         elif data.data == "cleanstart":
             rospy.loginfo("received signal: clean mode start")
-            if clean_status == 0:
+            if clean_work_status == 0:
                 clean_work_launch.start()
-                clean_status = 1
+                clean_work_status = 1
                 
         elif data.data == "cleanstop":
             rospy.loginfo("received signal: clean stop")
             clean_work_launch.shutdown()
             clean_work_launch = init_launch(clean_work_launch_file, ProcessListener())
-            clean_status = 0
+            clean_work_status = 1
 
         elif data.data == "cleanclose":
             rospy.loginfo("received signal: clean close")
             clean_launch.shutdown()
             clean_launch = init_launch(clean_launch_file, ProcessListener())
             clean_status = 0
-
 
         elif data.data == "opentable":
             rospy.loginfo("received signal: open table")
@@ -157,7 +162,9 @@ if __name__ == "__main__":
         elif data.data == "servestart":
             rospy.loginfo("received signal: serving start")
             if serve_status == 0:
-                rospy.Subscriber('/odom', Odometry, getOdompos)
+                #rospy.Subscriber('/odom', Odometry, getOdompos)
+                #rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, getOdompos)
+
                 time.sleep(1)
                 serving_launch.start()
                 serve_status = 1

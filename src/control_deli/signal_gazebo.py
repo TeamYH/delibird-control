@@ -125,6 +125,8 @@ if __name__ == "__main__":
         elif data.data == "cleanstart":
             rospy.loginfo("received signal: clean start")
             if clean_work_status == 0:
+                rospy.Subscriber('/odom', Odometry, getOdompos)
+                time.sleep(1)
                 clean_work_launch.start()
                 clean_work_status = 1
                 
@@ -136,6 +138,10 @@ if __name__ == "__main__":
 
         elif data.data == "cleanclose":
             rospy.loginfo("reecived signal: clean close")
+            if clean_work_status == 1:
+                clean_work_launch.shutdown()
+                clean_work_launch = init_launch(clean_work_launch_file, ProcessListener())
+                clean_work_status = 0
             clean_launch.shutdown()
             clean_launch = init_launch(clean_launch_file, ProcessListener())
             clean_status = 0
