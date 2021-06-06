@@ -52,18 +52,5 @@ This is four menu and each signal
 
  <http://wiki.ros.org/roslaunch/API%20Usage>
 
----
-
-### Author
-
-| name | Link to |
-|---|---|
-| 조현준 | https://github.com/hyunjun-cho |
-| 박현진 | https://github.com/hhhhjjjj96 |
-| 정진희 | https://github.com/sexyjiny |
-
-
-
-
 
 
