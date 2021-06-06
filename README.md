@@ -4,10 +4,11 @@
 
 ### Requirement
 
-| name | version | etc | <hr/>
-|python| Python 2.7.17 | <hr/>
-| ROS | Melodic || <hr/>
-| Ubuntu | 18.04 LTS | <hr/>
+| name | version |
+|---|---|
+|python| Python 2.7.17 | 
+| ROS | Melodic |
+| Ubuntu | 18.04 LTS | 
 
 
 ---
@@ -55,11 +56,11 @@ This is four menu and each signal
 
 ### Author
 
-| name | Link to |<hr/>
-| 조현준 | gusrkfl0609 |<hr/>
-| 박현진 | hhhhjjjj96 |<hr/>
-| 정진희 | |<hr/>
-
+| name | Link to |
+|---|---|
+| 조현준 | https://github.com/hyunjun-cho |
+| 박현진 | https://github.com/hhhhjjjj96 |
+| 정진희 | https://github.com/sexyjiny |
 
 
 
